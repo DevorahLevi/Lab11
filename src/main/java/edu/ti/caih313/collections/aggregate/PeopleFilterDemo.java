@@ -3,9 +3,7 @@ package edu.ti.caih313.collections.aggregate;
 import edu.ti.caih313.collections.dataobj.Name;
 import edu.ti.caih313.collections.dataobj.Person;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.OptionalDouble;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static edu.ti.caih313.collections.dataobj.Person.Gender.*;
@@ -64,12 +62,55 @@ public class PeopleFilterDemo {
                 .forEach(e -> System.out.println(e.getName()));
 
         System.out.print("\n");
-        System.out.println("First four last names uppercased.");
+        System.out.println("First four last names upper-cased.");
         Stream<String> fourLastNamesUpperStream =
                 Arrays.stream(personArray)
                 .map(p -> p.getName().getLastName().toUpperCase())
                 .sorted()
                 .limit(4);
         fourLastNamesUpperStream.forEach(s -> System.out.print(s + ", "));
+
+        System.out.print("\n");
+        System.out.println("Youngest Female.");
+        Stream<Name> youngestFemale = Arrays.stream(personArray)
+                .filter(p -> p.getGender() == FEMALE)
+                .sorted((p1, p2) -> p1.getAge() - p2.getAge())
+                .map(Person :: getName).limit(1);
+        youngestFemale.forEach(p -> System.out.println(p));
+
+        System.out.print("\n");
+        System.out.println("Oldest Male.");
+        Stream<Name> oldestMale = Arrays.stream(personArray)
+                .filter(p -> p.getGender() == MALE)
+                .sorted((p1, p2) -> p2.getAge() - p1.getAge())
+                .map(Person :: getName).limit(1);
+        oldestMale.forEach(p -> System.out.println(p));
+
+        System.out.print("\n");
+        System.out.println("List of Unique Last Names.");
+        Stream<String> uniqueLastNames = Arrays.stream(personArray)
+                .map(p -> p.getName().getLastName())
+                .distinct();
+        uniqueLastNames.forEach(p -> System.out.println(p));
+
+        System.out.print("\n");
+        System.out.println("Histogram of family members per family.");
+        Stream<String> lastNames = Arrays.stream(personArray)
+                .map(p -> p.getName().getLastName());
+        ArrayList<String> lastNamesArray = new ArrayList<String>();
+        lastNames.forEach(p -> lastNamesArray.add(p));
+        HashMap<String, Integer> histogramFamMembers = new HashMap<>();
+        for (int i = 0; i < lastNamesArray.size(); i++)
+        {
+            if (histogramFamMembers.containsKey(lastNamesArray.get(i)))
+            {
+                histogramFamMembers.put(lastNamesArray.get(i), histogramFamMembers.get(lastNamesArray.get(i)) + 1);
+            }
+            else
+            {
+                histogramFamMembers.put(lastNamesArray.get(i), new Integer(1));
+            }
+        }
+        System.out.println(histogramFamMembers);
     }
 }

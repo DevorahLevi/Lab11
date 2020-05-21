@@ -1,7 +1,7 @@
 package edu.ti.caih313.collections.lambda;
 
 @FunctionalInterface
-public interface IntegerMath
+public interface UnaryMath
 {
-    int operation(int a, int b);
+    double operation(double a);
 }
